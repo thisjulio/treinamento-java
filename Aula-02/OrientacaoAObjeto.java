@@ -32,6 +32,9 @@ interface Forma2D {
 }
 
 // Criar interface Forma3D e tornar possível para as formas Geométricas de Cubo e Cilindro, realizar a projeção no eixo XY
+interface Forma3D {
+    FormaGeometrica projecao();
+}
 
 class Quadrado extends FormaGeometrica implements Forma2D {
     protected int largura;
@@ -67,7 +70,7 @@ class Circulo extends FormaGeometrica {
     }
 }
 
-class Cubo extends FormaGeometrica {
+class Cubo extends FormaGeometrica implements Forma3D {
     protected int largura;
     protected int comprimento;
     protected int altura;
@@ -83,9 +86,13 @@ class Cubo extends FormaGeometrica {
     public String toString() {
         return "largura: " + this.largura +  " comprimento: " + this.comprimento + " altura: " + this.altura + " " + super.toString();
     }
+
+    public Quadrado projecao() {
+        return new Quadrado(this.largura, this.comprimento, this.pontoCentral.posicaoX, this.pontoCentral.posicaoY, 0);
+    }
 }
 
-class Cilindro extends FormaGeometrica {
+class Cilindro extends FormaGeometrica implements Forma3D {
     protected int raio;
     protected int altura;
 
@@ -98,6 +105,10 @@ class Cilindro extends FormaGeometrica {
     @Override
     public String toString() {
         return "raio: " + this.raio + "altura: " + this.altura + " " + super.toString();
+    }
+
+    public Circulo projecao() {
+        return new Circulo(this.raio, this.pontoCentral.posicaoX, this.pontoCentral.posicaoY, 0);
     }
 }
 
@@ -115,11 +126,14 @@ public class OrientacaoAObjeto {
 
         Cubo cb1 = q1.extrusaoLinear(7);
 
+        Quadrado cbp = cb1.projecao();
+
         System.out.println("Exibindo forma geométrica c1: " + c1.toString()); // .toString()
         System.out.println("Exibindo forma geométrica c2: " + c2);
 
         System.out.println("Exibindo forma geométrica q1: " + q1);
         System.out.println("Exibindo forma geométrica cb1: " + cb1);
+        System.out.println("Exibindo forma geométrica cbp: " + cbp);
 
         // List<Quadrado> formasQuadrado = new ArrayList();
         // formasQuadrado.add(q1);
@@ -146,6 +160,5 @@ public class OrientacaoAObjeto {
         for (FormaGeometrica f: formas){
             System.out.println(f);
         }
-
     }
 }
