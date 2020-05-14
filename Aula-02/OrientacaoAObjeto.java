@@ -1,6 +1,8 @@
 import java.util.List; // Interface
 import java.util.ArrayList; // Implementação da interface List
 
+// interface Forma3D {}
+
 class Ponto {
     protected int posicaoX;
     protected int posicaoY;
@@ -25,7 +27,13 @@ abstract class FormaGeometrica {
     }
 }
 
-class Quadrado extends FormaGeometrica {
+interface Forma2D {
+    FormaGeometrica extrusaoLinear(int altura);
+}
+
+// Criar interface Forma3D e tornar possível para as formas Geométricas de Cubo e Cilindro, realizar a projeção no eixo XY
+
+class Quadrado extends FormaGeometrica implements Forma2D {
     protected int largura;
     protected int comprimento;
 
@@ -38,6 +46,10 @@ class Quadrado extends FormaGeometrica {
     @Override
     public String toString() {
         return "largura: " + this.largura +  " comprimento: " + this.comprimento + " " + super.toString();
+    }
+
+    public Cubo extrusaoLinear(int altura) {
+        return new Cubo(this.largura, this.comprimento, altura, this.pontoCentral.posicaoX, this.pontoCentral.posicaoY, this.pontoCentral.posicaoZ);
     }
 }
 
@@ -55,9 +67,39 @@ class Circulo extends FormaGeometrica {
     }
 }
 
-// class Poligono extends FormaGeometrica {
-//     protected Ponto[] pontos;
-// }
+class Cubo extends FormaGeometrica {
+    protected int largura;
+    protected int comprimento;
+    protected int altura;
+
+    Cubo(int largura, int comprimento, int altura, int posicaoX, int posicaoY, int posicaoZ) {
+        super(posicaoX, posicaoY, posicaoZ);
+        this.altura = altura;
+        this.largura = largura;
+        this.comprimento = comprimento;
+    }
+
+    @Override
+    public String toString() {
+        return "largura: " + this.largura +  " comprimento: " + this.comprimento + " altura: " + this.altura + " " + super.toString();
+    }
+}
+
+class Cilindro extends FormaGeometrica {
+    protected int raio;
+    protected int altura;
+
+    Cilindro(int raio, int altura, int posicaoX, int posicaoY, int posicaoZ) {
+        super(posicaoX, posicaoY, posicaoZ);
+        this.altura = altura;
+        this.raio = raio;
+    }
+
+    @Override
+    public String toString() {
+        return "raio: " + this.raio + "altura: " + this.altura + " " + super.toString();
+    }
+}
 
 
 
@@ -71,10 +113,13 @@ public class OrientacaoAObjeto {
 
         Quadrado q1 = new Quadrado(10, 10, 15,15,15);
 
+        Cubo cb1 = q1.extrusaoLinear(7);
+
         System.out.println("Exibindo forma geométrica c1: " + c1.toString()); // .toString()
         System.out.println("Exibindo forma geométrica c2: " + c2);
 
         System.out.println("Exibindo forma geométrica q1: " + q1);
+        System.out.println("Exibindo forma geométrica cb1: " + cb1);
 
         // List<Quadrado> formasQuadrado = new ArrayList();
         // formasQuadrado.add(q1);
