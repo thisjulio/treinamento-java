@@ -10,6 +10,7 @@ import java.util.List;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Date;
 import java.util.Calendar;
 
@@ -147,7 +148,19 @@ class Banco {
     //      Só é possível sacar de uma conta de investimento 30 dias após o depósito do investimento;
     private Map<Usuario,Map<String,Conta>> mapaUsuarioContas;
 
-    Banco(){
+    private static Banco instance = new Banco();
+
+    // Singleton
+    public static Banco obterBanco() {
+        if (Banco.instance != null) {
+            return Banco.instance;
+        } else {
+            Banco.instance = new Banco();
+            return Banco.instance;
+        }
+    }
+
+    private Banco(){
         this.mapaUsuarioContas = new HashMap();
     }
 
@@ -214,40 +227,52 @@ class Banco {
     }
 }
 
+
+
 public class Motor{
     
     public static void main(String[] args) {
+
+        Scanner c = new Scanner(System.in);
+
         // João
         Usuario joao = new Usuario("João");
-        
+            
         // Maria
         Usuario maria = new Usuario("Maria");
 
         // Fernanda
         Usuario fernanda = new Usuario("Fernanda");
-
-        Banco banco = new Banco();
         
+        Integer t = 0;
+        while(t != -1) {
+            t = c.nextInt();
 
-        // Operações
-        banco.criarConta(joao, ContaCorrente.class.getName());
-        banco.criarConta(joao, ContaPoupanca.class.getName());
-        banco.criarConta(maria, ContaCorrente.class.getName());
-        banco.criarConta(maria, ContaInvestimento.class.getName());
-        banco.criarConta(fernanda, "ContaEspecial");
+            Banco banco = Banco.obterBanco(); 
 
-        banco.depositar(50.0, joao, ContaCorrente.class.getName());
-        banco.transferir(20.0, joao, ContaCorrente.class.getName(), joao, ContaPoupanca.class.getName());
-        
-        banco.sacar(10.0, maria, ContaCorrente.class.getName());
-        
-        // banco.sacar(10.0, fernanda, ContaCorrente.class.getName());
 
-        banco.transferir(10.0, joao, ContaCorrente.class.getName(), maria, ContaCorrente.class.getName());
+            // Operações
+            banco.criarConta(joao, ContaCorrente.class.getName());
+            banco.criarConta(joao, ContaPoupanca.class.getName());
+            banco.criarConta(maria, ContaCorrente.class.getName());
+            banco.criarConta(maria, ContaInvestimento.class.getName());
+            banco.criarConta(fernanda, "ContaEspecial");
 
-        banco.depositar(30.0, maria, ContaInvestimento.class.getName());
-        banco.sacar(10.0, maria, ContaInvestimento.class.getName());
+            banco.depositar(50.0, joao, ContaCorrente.class.getName());
+            banco.transferir(20.0, joao, ContaCorrente.class.getName(), joao, ContaPoupanca.class.getName());
+            
+            banco.sacar(10.0, maria, ContaCorrente.class.getName());
 
-        banco.verTodosOsSaldos();
+            banco.transferir(10.0, joao, ContaCorrente.class.getName(), maria, ContaCorrente.class.getName());
+
+            banco.depositar(30.0, maria, ContaInvestimento.class.getName());
+            banco.sacar(10.0, maria, ContaInvestimento.class.getName());
+
+            banco.verTodosOsSaldos();
+            
+            System.out.println("Instancia do banco Banco: " + banco);
+        }
+
+        c.close();
     }
 }
