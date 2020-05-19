@@ -67,7 +67,7 @@ mvn install
 Após finalizar a instalação das dependências deveremos adicionar as dependências, devemos realizar a implementação do servidor http, para isso navegue até o arquivo `src/main/java/br/com/radixeng/treinamentojava/app/App.java` e o deixe no seguinte formato:
 
 ```java
-package br.com.radixeng.treinamentojava;
+package br.com.radixeng.treinamentojava.app;
 
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
@@ -95,7 +95,7 @@ public class App
 Após isto crie a classe `Servico.java` que irá conter a chamada do nosso helloWorld e a deixe com o seguinte formato:
 
 ```java
-package br.com.radixeng.treinamentojava;
+package br.com.radixeng.treinamentojava.app;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
