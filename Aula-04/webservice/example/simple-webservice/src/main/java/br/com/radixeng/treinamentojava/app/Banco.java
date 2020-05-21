@@ -175,36 +175,40 @@ public class Banco implements IBanco {
         return retorno;
     }
 
-//
-//    public void depositar(Double valor, Usuario usuario, String tipo) {
-//        Conta conta = this.obterContaApartirUsuario(tipo, usuario);
-//
-//        conta.depositar(valor);
-//    }
-//
-//    public Double sacar(Double valor, Usuario usuario, String tipo) {
-//        Conta conta = this.obterContaApartirUsuario(tipo, usuario);
-//
-//        try {
-//            conta.sacar(valor);
-//        } catch (java.lang.NullPointerException e) {
-//            System.out.println("Ocorreu um erro inesperado: "+ usuario.obterNome());
-//            // throw e;
-//        }
-//
-//        return valor;
-//    }
-//
-//    public void transferir(Double valor, Usuario origem, String tipoOrigem, Usuario destino, String tipoDestino) {
-//        Conta contaOrigem = this.obterContaApartirUsuario(tipoOrigem, origem);//this.mapaUsuarioConta.get(origem);
-//        Conta contaDestino = this.obterContaApartirUsuario(tipoDestino, destino);//this.mapaUsuarioConta.get(destino);
-//        contaOrigem.transferir(valor, contaDestino);
-//    }
-//
-//    private Conta obterContaApartirUsuario(String tipo, Usuario usuario) {
-//        Map<String, Conta> tiposDeContaUsuario = this.mapaUsuarioContas.get(usuario);
-//        Conta conta = tiposDeContaUsuario.get(tipo);
-//
-//        return conta;
-//    }
+
+    public void depositar(Double valor, IUsuario usuario, TipoDeConta tipo) {
+        Conta conta = this.obterContaApartirUsuario(tipo, usuario);
+
+        conta.depositar(valor);
+    }
+
+    public Double sacar(Double valor, IUsuario usuario, TipoDeConta tipo) {
+        Conta conta = this.obterContaApartirUsuario(tipo, usuario);
+
+        try {
+            conta.sacar(valor);
+        } catch (java.lang.NullPointerException e) {
+            System.out.println("Ocorreu um erro inesperado: "+ usuario.obterIdentificador());
+            // throw e;
+        }
+
+        return valor;
+    }
+
+    public void transferir(Double valor, IUsuario origem, TipoDeConta tipoOrigem, IUsuario destino, TipoDeConta tipoDestino) {
+        Conta contaOrigem = this.obterContaApartirUsuario(tipoOrigem, origem);//this.mapaUsuarioConta.get(origem);
+        Conta contaDestino = this.obterContaApartirUsuario(tipoDestino, destino);//this.mapaUsuarioConta.get(destino);
+        contaOrigem.transferir(valor, contaDestino);
+    }
+
+    public Map<TipoDeConta, Conta> obterContasUsuario(IUsuario usuario) {
+        return this.mapaUsuarioContas.get(usuario.obterIdentificador());
+    }
+
+    private Conta obterContaApartirUsuario(TipoDeConta tipo, IUsuario usuario) {
+        Map<TipoDeConta, Conta> tiposDeContaUsuario = this.mapaUsuarioContas.get(usuario.obterIdentificador());
+        Conta conta = tiposDeContaUsuario.get(tipo);
+
+        return conta;
+    }
 }
