@@ -1,9 +1,12 @@
 package br.com.radixeng.motorBanco.Motor;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Banco {
@@ -62,20 +65,31 @@ public class Banco {
     public String consultarExtrato(Cliente usuario, String tipoConta, int intervalo){
         String extrato = "--------EXTRATO--------\n";
 
-        Conta conta = obterConta(usuario, tipoConta);
+        List<Operacao> operacoes = this.consultaExtrato(usuario, tipoConta, intervalo);
         
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        for (Operacao operacao : operacoes) {
+            String data = dateFormat.format(operacao.getData());
+            extrato += data + " --> (" + operacao.getValor() + ")\n-----------------------\n";
+        }
 
+        return extrato;
+    }
+
+    public List<Operacao> consultaExtrato(Cliente usuario, String tipoConta, int intervalo) {
+        List<Operacao> extrato = new ArrayList<>();
+
+        Conta conta = obterConta(usuario, tipoConta);
+        
         Date dateAgora = DataBanco.agora();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dateAgora);
         calendar.add(Calendar.DAY_OF_MONTH, -intervalo);
         Date dateFiltro = calendar.getTime();
         
-        for (Operacao transacao : conta.getTransacoes()) {
-            if(transacao.getData().compareTo(dateFiltro) >= 0) {
-                String data = dateFormat.format(transacao.getData());
-                extrato += data + " --> (" + transacao.getValor() + ")\n-----------------------\n";
+        for (Operacao operacao : conta.getTransacoes()) {
+            if(operacao.getData().compareTo(dateFiltro) >= 0) {
+                extrato.add(operacao);
             }
         }
 
