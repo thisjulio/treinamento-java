@@ -6,7 +6,7 @@ import java.util.Date;
 public class ContaInvestimento extends Conta {
     //Adicionar regra para que saques na conta de investimento só possam ser realizados 30 dias após o depósito (saque aniversário)
     @Override
-    public void sacar(double valor) {
+    public void sacar(double valor, Cliente usuarioOrigem, Cliente usuarioDestino) {
         double saldoDisponivel = 0;
         
         Date dateAgora = DataBanco.agora();
@@ -19,14 +19,14 @@ public class ContaInvestimento extends Conta {
         calendar.add(Calendar.DAY_OF_MONTH, -30);
         Date date30DiasAtras = calendar.getTime();
 
-        for (Transacao transacao : this.transacoes) {
-            if (transacao.getData().compareTo(date30DiasAtras) <= 0) {
-                saldoDisponivel += transacao.getValor();
+        for (Operacao operacao : this.operacoes) {
+            if (operacao.getData().compareTo(date30DiasAtras) <= 0) {
+                saldoDisponivel += operacao.getValor();
             }
         }
 
         if (valor <= saldoDisponivel) {
-            super.sacar(valor);
+            super.sacar(valor, usuarioOrigem, usuarioDestino);
         }
     }
 }

@@ -35,14 +35,14 @@ public class Banco {
     }
 
 
-    public void sacar(double valor, Cliente usuario, String tipoConta) {
+    public void sacar(double valor, Cliente usuario, String tipoConta, Cliente usuarioOrigem) {
         Conta conta = obterConta(usuario, tipoConta);
-        conta.sacar(valor);
+        conta.sacar(valor, usuarioOrigem, usuario);
     }
 
-    public void depositar(double valor, Cliente usuario, String tipoConta) {
+    public void depositar(double valor, Cliente usuario, String tipoConta, Cliente usuarioOrigem) {
         Conta conta = obterConta(usuario, tipoConta);
-        conta.depositar(valor);
+        conta.depositar(valor, usuarioOrigem, usuario);
     }
 
     private Conta obterConta(Cliente usuario, String tipoConta) {
@@ -51,8 +51,8 @@ public class Banco {
     }
 
     public void transferir(double valor, Cliente usuarioOrigem, String tipoContaOrigem, Cliente usuarioDestino, String tipoContaDestino) {
-        this.sacar(valor, usuarioOrigem, tipoContaOrigem);
-        this.depositar(valor, usuarioDestino, tipoContaDestino);
+        this.sacar(valor, usuarioOrigem, tipoContaOrigem, usuarioDestino);
+        this.depositar(valor, usuarioDestino, tipoContaDestino, usuarioOrigem);
     }
 
     public double saldo(Cliente usuario, String tipoConta){
@@ -72,7 +72,7 @@ public class Banco {
         calendar.add(Calendar.DAY_OF_MONTH, -intervalo);
         Date dateFiltro = calendar.getTime();
         
-        for (Transacao transacao : conta.getTransacoes()) {
+        for (Operacao transacao : conta.getTransacoes()) {
             if(transacao.getData().compareTo(dateFiltro) >= 0) {
                 String data = dateFormat.format(transacao.getData());
                 extrato += data + " --> (" + transacao.getValor() + ")\n-----------------------\n";
